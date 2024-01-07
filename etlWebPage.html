@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ETL Process</title>
+  <style>
+    /* Basic styling for the form */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 50px;
+    }
+    form {
+      width: 300px;
+      margin: 0 auto;
+    }
+    input[type="file"] {
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+    }
+    .message {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <form id="etlForm">
+    <input type="file" id="fileInput" name="file" accept=".csv">
+    <input type="text" id="mongodbURI" name="mongodb_uri" placeholder="MongoDB URI"><br>
+    <input type="text" id="dbName" name="db_name" placeholder="Database Name"><br>
+    <input type="text" id="collectionName" name="collection_name" placeholder="Collection Name"><br>
+    <button type="button" onclick="startETL()">Start ETL Process</button>
+  </form>
+  <div class="message" id="message"></div>
+
+  <script>
+    function startETL() {
+      const formData = new FormData(document.getElementById('etlForm'));
+      const url = 'http://127.0.0.1:5000/etl'; // Replace with your API endpoint
+
+      fetch(url, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('message').innerText = data.message || data.error || 'Unknown error occurred';
+      })
+      .catch(error => {
+        document.getElementById('message').innerText = 'Error: ' + error.message;
+      });
+    }
+  </script>
+</body>
+</html>
